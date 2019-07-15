@@ -8,7 +8,7 @@ namespace Backend.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class ValuesController : ControllerBase
+    public class ValuesController : Microsoft.AspNetCore.Mvc.ControllerBase
     {
         // GET api/values
         [HttpGet]
