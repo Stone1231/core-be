@@ -29,7 +29,7 @@ namespace Backend.Controllers
                         requertAt = requestAt,
                         expiresIn = TokenAuthOption.ExpiresSpan.TotalSeconds,
                         tokeyType = TokenAuthOption.TokenType,
-                        accessToken = token
+                        token = token
                     }
                 );
             }
@@ -48,9 +48,10 @@ namespace Backend.Controllers
             var handler = new JwtSecurityTokenHandler();
 
             ClaimsIdentity identity = new ClaimsIdentity(
-                new GenericIdentity(login.Username, "TokenAuth"),
+                // new GenericIdentity(login.Username, "TokenAuth"),
                 new[] {
                     new Claim(ClaimTypes.Name, login.Username.ToString()),
+                    new Claim("username", login.Username.ToString()),
                     new Claim(ClaimTypes.Role, "dev")
                     }
             );
@@ -77,7 +78,7 @@ namespace Backend.Controllers
 
             return Ok(new
             {
-                UserName = claimsIdentity.Name,
+                Username = claimsIdentity.Name,
                 Role = claimsIdentity.Claims.Single(
                     m => m.Type == ClaimTypes.Role).Value
             });

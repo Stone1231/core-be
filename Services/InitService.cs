@@ -28,7 +28,7 @@ namespace Backend.Services
                 _deptService.Init();
                 _projService.Init();
                 _userService.Init();
-
+                FileService.Clear("img");
                 transaction.Commit();
             }
         }
@@ -40,7 +40,7 @@ namespace Backend.Services
                 _deptService.Clear();
                 _projService.Clear();
                 _userService.Clear();
-
+                FileService.Clear("img");
                 transaction.Commit();
             }
         }

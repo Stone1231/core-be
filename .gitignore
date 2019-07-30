@@ -275,4 +275,4 @@ __pycache__/
 
 /Migrations/*
 /db.sqlite3*
-/Resources/img/*
+/Static/img/*

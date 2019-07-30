@@ -97,7 +97,7 @@ namespace Backend
                 options => options
                 .WithOrigins(
                     "http://localhost:4200",
-                    "http://localhost:4200")
+                    "http://localhost:4201")
                     .AllowAnyMethod()
                     .AllowAnyHeader()
             );
@@ -109,8 +109,8 @@ namespace Backend
             // app.UseStaticFiles();
             app.UseStaticFiles(new StaticFileOptions()
             {
-                FileProvider = new PhysicalFileProvider(Path.Combine(Directory.GetCurrentDirectory(), @"Resources")),
-                RequestPath = new PathString("/Resources")
+                FileProvider = new PhysicalFileProvider(Path.Combine(Directory.GetCurrentDirectory(), @"Static")),
+                RequestPath = new PathString("/Static")
             });
 
             #region Handle Exception
@@ -129,8 +129,8 @@ namespace Backend
                         await context.Response.WriteAsync(JsonConvert.SerializeObject(
                             new
                             {
-                                State = 0,
-                                Msg = "token expired"
+                                state = 0,
+                                msg = "token expired"
                             })
                         );
                     }
@@ -142,8 +142,8 @@ namespace Backend
                         await context.Response.WriteAsync(JsonConvert.SerializeObject(
                         new
                         {
-                            State = -1,
-                            Msg = error.Error.Message
+                            state = -1,
+                            msg = error.Error.Message
                         }));
                     }
                     //when no error, do next.

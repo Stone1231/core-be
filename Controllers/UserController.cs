@@ -109,29 +109,30 @@ namespace Backend.Controllers
         {
             if (file != null)
             {
-                // var folder = _hostingEnvironment.WebRootPath + "/img";
-                var folder = Path.Combine("Resources", "img");
-                // if (!Directory.Exists(folder))
+                // // var folder = _hostingEnvironment.WebRootPath + "/img";
+                // var folder = Path.Combine("Static", "img");
+                // // if (!Directory.Exists(folder))
+                // // {
+                // //     Directory.CreateDirectory(folder);
+                // // }
+
+                // // var filePath = Path.Combine(folder, file.FileName);
+                // var filePath = Path.Combine(
+                //     Path.Combine(Directory.GetCurrentDirectory(), folder), 
+                //     file.FileName);
+
+                // if (System.IO.File.Exists(filePath))
                 // {
-                //     Directory.CreateDirectory(folder);
+                //     System.IO.File.Delete(filePath);
                 // }
 
-                // var filePath = Path.Combine(folder, file.FileName);
-                var filePath = Path.Combine(
-                    Path.Combine(Directory.GetCurrentDirectory(), folder), 
-                    file.FileName);
+                // using (var fileStream = new FileStream(filePath, FileMode.Create)) {
+                //     //await file.CopyToAsync(fileStream);
+                //     file.CopyTo(fileStream);
+                // }
 
-                if (System.IO.File.Exists(filePath))
-                {
-                    System.IO.File.Delete(filePath);
-                }
-
-                using (var fileStream = new FileStream(filePath, FileMode.Create)) {
-                    //await file.CopyToAsync(fileStream);
-                    file.CopyTo(fileStream);
-                }
-
-                return file.FileName;            
+                // return file.FileName;            
+                return FileService.Upload(file,"img");
             }
             return "";
         }
