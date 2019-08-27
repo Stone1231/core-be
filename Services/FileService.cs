@@ -9,10 +9,15 @@ namespace Backend.Services
         {
             var folderPath = Path.Combine("Static", folder);
 
+            if (!Directory.Exists(folderPath))
+            {
+                Directory.CreateDirectory(folderPath);
+            } 
+
             var filePath = Path.Combine(
                                 Path.Combine(Directory.GetCurrentDirectory(), folderPath),
                                 file.FileName);
-
+                                               
             if (File.Exists(filePath))
             {
                 File.Delete(filePath);
@@ -29,6 +34,10 @@ namespace Backend.Services
 
         public static void Clear(string folder){
             var folderPath = Path.Combine("Static", folder);
+
+            if (!Directory.Exists(folderPath)){
+                return;
+            }
 
             var dir = new DirectoryInfo(
                 Path.Combine(
