@@ -8,10 +8,10 @@ namespace Backend.Services
 {
     public class ProjService : ServiceBase
     {
-        public ProjService(IUnitOfWork unitofwork): base(unitofwork)
+        public ProjService(IUnitOfWork unitofwork) : base(unitofwork)
         {
 
-        }  
+        }
 
         public List<Proj> GetAll()
         {
@@ -34,12 +34,13 @@ namespace Backend.Services
             if (entity != null)
             {
                 _unitofwork.Proj.Delete(entity);
+                _unitofwork.Save();
             }
             else
             {
                 throw new KeyNotFoundException();
             }
-        }        
+        }
 
         public void Init()
         {
@@ -52,14 +53,14 @@ namespace Backend.Services
             _unitofwork.Proj.DeleteAll();
 
             for (int i = 0; i < names.Length; i++)
-                {
-                    var item = new Proj();
-                    item.Id = i + 1;
-                    item.Name = names[i];
-                    _unitofwork.Proj.Create(item);
-                }
+            {
+                var item = new Proj();
+                item.Id = i + 1;
+                item.Name = names[i];
+                _unitofwork.Proj.Create(item);
+            }
 
-                _unitofwork.Save();
+            _unitofwork.Save();
         }
 
         public void Clear()

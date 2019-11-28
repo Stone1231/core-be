@@ -12,8 +12,8 @@ namespace Backend.Controllers
             DeptService service)
         {
             _service = service;
-        }  
-        
+        }
+
         [HttpGet]
         public IEnumerable<Dept> Get()
         {
@@ -30,13 +30,26 @@ namespace Backend.Controllers
             }
 
             var data = _service.GetSingle(id);
-        
+
             if (data == null)
             {
                 return NotFound();
             }
 
             return Ok(data);
-        }             
+        }
+
+        [HttpDelete("{id}")]
+        public IActionResult Delete([FromRoute] int id)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            _service.Delete(id);
+
+            return Ok();
+        }
     }
 }

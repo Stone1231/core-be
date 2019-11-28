@@ -65,33 +65,35 @@ namespace Backend.Services
             var ori = _unitofwork.User
                 .Include(m => m.Dept)
                 .Include(m => m.UserRelProjs)
-                .ThenInclude(m => m.Proj)
+                // .ThenInclude(m => m.Proj) //The instance of entity type 'Proj' cannot be tracked because another instance is already being tracked                
                 .SingleOrDefault(m => m.Id == entity.Id);
 
-            // entity.UserRelProjs = new List<UserRelProj>();
-
             ori.UserRelProjs.Clear();
+            // _unitofwork.User.Update(ori);
+            // _unitofwork.Save();
+
+            // entity.UserRelProjs = new List<UserRelProj>();
 
             var projs = _unitofwork.Proj
             .FindByCondition(m => entity.Projs.Contains(m.Id));
             foreach (var proj in projs)
             {
                 var mapping = new UserRelProj();
-                // mapping.UserId = item.Id;
-                // mapping.ProjId = proj.Id;                    
-                mapping.User = ori; //entity ok too
+                // mapping.UserId = entity.Id;
+                // mapping.ProjId = proj.Id;
+                mapping.User = ori; // entity ok too
                 mapping.Proj = proj;
-                //entity.UserRelProjs.Add(mapping); unsuccess!
                 ori.UserRelProjs.Add(mapping);
+                // entity.UserRelProjs.Add(mapping); //unsuccess!
             }
 
-            ////Error Null TypeMapping in Sql Tree ...
+            // //Error Null TypeMapping in Sql Tree ...
             // var mappings = _unitofwork.Proj
             // .FindByCondition(m => entity.Projs.Contains(m.Id))
             // .Select(m => new UserRelProj
             // {
-            //     UserId = entity.Id,
-            //     ProjId = m.Id,
+            //     // UserId = entity.Id,
+            //     // ProjId = m.Id,
             //     User = ori,
             //     Proj = m
             // });
@@ -152,7 +154,7 @@ namespace Backend.Services
 
         public List<User> Query(string name)
         {
-            return _unitofwork.User.FindByCondition(m=>m.Name.Contains(name)).ToList();
+            return _unitofwork.User.FindByCondition(m => m.Name.Contains(name)).ToList();
         }
     }
 }

@@ -17,11 +17,11 @@ namespace Backend.Controllers
 {
     public class UserController : ControllerBase
     {
-        private readonly UserService _service;        
+        private readonly UserService _service;
         public UserController(UserService service)
         {
             _service = service;
-        }        
+        }
 
         // GET: api/User
         // [EnableCors]
@@ -59,10 +59,11 @@ namespace Backend.Controllers
                 return BadRequest(ModelState);
             }
 
-            if (id != user.Id)
-            {
-                return BadRequest();
-            }
+            user.Id = id;
+            // if (id != user.Id)
+            // {
+            //     return BadRequest();
+            // }
 
             // _context.Entry(user).State = EntityState.Modified;
 
@@ -93,7 +94,7 @@ namespace Backend.Controllers
             {
                 return BadRequest(ModelState);
             }
-            
+
             _service.Delete(id);
 
             return Ok();
@@ -132,7 +133,7 @@ namespace Backend.Controllers
                 // }
 
                 // return file.FileName;            
-                return FileService.Upload(file,"img");
+                return FileService.Upload(file, "img");
             }
             return "";
         }

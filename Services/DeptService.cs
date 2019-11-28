@@ -33,6 +33,7 @@ namespace Backend.Services
             if (entity != null)
             {
                 _unitofwork.Dept.Delete(entity);
+                _unitofwork.Save();
             }
             else
             {

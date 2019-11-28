@@ -36,16 +36,29 @@ namespace Backend
 
         public IConfiguration Configuration { get; }
 
+        // readonly string MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
+
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers();
 
+            // services.AddCors(options =>
+            // {
+            //     options.AddPolicy(MyAllowSpecificOrigins,
+            //     builder =>
+            //     {
+            //         builder.WithOrigins(
+            //             "http://localhost:4200",
+            //             "http://localhost:4201");
+            //     });
+            // });
+
             services.AddMvc()
             .AddNewtonsoftJson(
                 options => options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore
             );
-               
+
             services.AddDbContext<MyContext>(options => options.UseSqlite("Data Source=db.sqlite3"));
 
             services
@@ -93,18 +106,9 @@ namespace Backend
                 app.UseHsts();
             }
 
-            app.UseCors(
-                options => options
-                .WithOrigins(
-                    "http://localhost:4200",
-                    "http://localhost:4201")
-                    .AllowAnyMethod()
-                    .AllowAnyHeader()
-            );
-
             app.UseHttpsRedirection();
 
-            app.UseAuthorization();
+            // app.UseAuthorization();
 
             // app.UseStaticFiles();
             app.UseStaticFiles(new StaticFileOptions()
@@ -152,13 +156,24 @@ namespace Backend
             });
             #endregion
 
+            app.UseRouting();
+
+            // app.UseCors(MyAllowSpecificOrigins);
+            app.UseCors(
+                options => options
+                .WithOrigins(
+                    "http://localhost:4200",
+                    "http://localhost:4201")
+                    .AllowAnyMethod()
+                    .AllowAnyHeader()
+            );
+
             app.UseAuthentication();
 
-            app.UseRouting();
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
-            });             
+            });
             //app.UseMvc();              
         }
     }
