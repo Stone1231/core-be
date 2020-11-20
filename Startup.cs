@@ -72,16 +72,18 @@ namespace Backend
           IssuerSigningKey = TokenAuthOption.Key,
           ValidAudience = TokenAuthOption.Audience,
           ValidIssuer = TokenAuthOption.Issuer,
-                // When receiving a token, check that we've signed it.
-                ValidateIssuerSigningKey = true,
-                // When receiving a token, check that it is still valid.
-                ValidateLifetime = true,
-                // This defines the maximum allowable clock skew - i.e. provides a tolerance on the token expiry time 
-                // when validating the lifetime. As we're creating the tokens locally and validating them on the same 
-                // machines which should have synchronised time, this can be set to zero. and default value will be 5minutes
-                ClockSkew = TimeSpan.FromMinutes(0)
+          // When receiving a token, check that we've signed it.
+          ValidateIssuerSigningKey = true,
+          // When receiving a token, check that it is still valid.
+          ValidateLifetime = true,
+          // This defines the maximum allowable clock skew - i.e. provides a tolerance on the token expiry time 
+          // when validating the lifetime. As we're creating the tokens locally and validating them on the same 
+          // machines which should have synchronised time, this can be set to zero. and default value will be 5minutes
+          ClockSkew = TimeSpan.FromMinutes(0)
         };
       });
+
+      services.AddSwaggerGen();
 
       services.AddScoped<IUserRepository, UserRepository>();
       services.AddScoped<IDeptRepository, DeptRepository>();
@@ -122,39 +124,49 @@ namespace Backend
       {
         appBuilder.Use(async (context, next) =>
               {
-            var error = context.Features[typeof(IExceptionHandlerFeature)] as IExceptionHandlerFeature;
+                var error = context.Features[typeof(IExceptionHandlerFeature)] as IExceptionHandlerFeature;
 
-                  //when authorization has failed, should retrun a json message to client
-                  if (error != null && error.Error is SecurityTokenExpiredException)
-            {
-              context.Response.StatusCode = 401;
-              context.Response.ContentType = "application/json";
+                //when authorization has failed, should retrun a json message to client
+                if (error != null && error.Error is SecurityTokenExpiredException)
+                {
+                  context.Response.StatusCode = 401;
+                  context.Response.ContentType = "application/json";
 
-              await context.Response.WriteAsync(JsonConvert.SerializeObject(
+                  await context.Response.WriteAsync(JsonConvert.SerializeObject(
+                            new
+                            {
+                              state = 0,
+                              msg = "token expired"
+                            })
+                        );
+                }
+                //when orther error, retrun a error message json to client
+                else if (error != null && error.Error != null)
+                {
+                  context.Response.StatusCode = 500;
+                  context.Response.ContentType = "application/json";
+                  await context.Response.WriteAsync(JsonConvert.SerializeObject(
                         new
-                      {
-                        state = 0,
-                        msg = "token expired"
-                      })
-                    );
-            }
-                  //when orther error, retrun a error message json to client
-                  else if (error != null && error.Error != null)
-            {
-              context.Response.StatusCode = 500;
-              context.Response.ContentType = "application/json";
-              await context.Response.WriteAsync(JsonConvert.SerializeObject(
-                    new
-                  {
-                    state = -1,
-                    msg = error.Error.Message
-                  }));
-            }
-                  //when no error, do next.
-                  else await next();
-          });
+                        {
+                          state = -1,
+                          msg = error.Error.Message
+                        }));
+                }
+                //when no error, do next.
+                else await next();
+              });
       });
       #endregion
+
+      // Enable middleware to serve generated Swagger as a JSON endpoint.
+      app.UseSwagger();
+
+      // Enable middleware to serve swagger-ui (HTML, JS, CSS, etc.),
+      // specifying the Swagger JSON endpoint.
+      app.UseSwaggerUI(c =>
+      {
+        c.SwaggerEndpoint("/swagger/v1/swagger.json", "My API V1");
+      });
 
       app.UseRouting();
 
