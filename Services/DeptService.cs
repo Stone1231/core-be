@@ -1,7 +1,5 @@
 using Backend.Repositories;
 using Backend.Models;
-using System.Linq;
-using System.Collections.Generic;
 
 namespace Backend.Services
 {

@@ -1,9 +1,6 @@
-using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.ComponentModel.DataAnnotations;
-using Microsoft.AspNetCore.Http;
-using Newtonsoft.Json;
+using System.Text.Json.Serialization;
 
 namespace Backend.Models
 {
@@ -17,7 +14,7 @@ namespace Backend.Models
 
         [Column("id")]
         [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public int Id { get; set; }
+        public int? Id { get; set; }
         
         [Column("name")]
         public string Name { get; set; }
@@ -34,21 +31,21 @@ namespace Backend.Models
 
         //https://stackoverflow.com/questions/39322085/how-to-save-iformfile-to-disk
         [NotMapped]
-        public IFormFile PhotoFile { get; set; }
+        public IFormFile? PhotoFile { get; set; }
 
-        [JsonProperty(PropertyName = "dept")] 
+        [JsonPropertyName("dept")] 
         [Column("dept_id")]
         [ForeignKey("Dept")]
         public int DeptId { get; set; }
         
         [JsonIgnore]
-        public virtual Dept Dept { get; set; }    
+        public virtual Dept? Dept { get; set; }    
 
         [JsonIgnore]
-        public virtual ICollection<UserRelProj> UserRelProjs { get; set; }
+        public virtual ICollection<UserRelProj>? UserRelProjs { get; set; }
         // public virtual ICollection<Proj> Projs { get; set; }
 
-        [JsonProperty(PropertyName = "projs")]
+        [JsonPropertyName("projs")]
         [NotMapped]
         public List<int> Projs { get; set; }
     }
